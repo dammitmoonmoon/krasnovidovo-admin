@@ -244,7 +244,7 @@ module.exports = function(webpackEnv) {
       runtimeChunk: true,
     },
     resolve: {
-      // This allows you to set a fallback for where Webpack should look for modules.
+      // This allows you to set a fallback for where Webpack should look for pages.
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
@@ -383,7 +383,7 @@ module.exports = function(webpackEnv) {
             },
             // "postcss" loader applies autoprefixer to our CSS.
             // "css" loader resolves paths in CSS and adds assets as dependencies.
-            // "style" loader turns CSS into JS modules that inject <style> tags.
+            // "style" loader turns CSS into JS pages that inject <style> tags.
             // In production, we use MiniCSSExtractPlugin to extract that CSS
             // to a file, but in development "style" loader enables hot editing
             // of CSS.
@@ -448,7 +448,7 @@ module.exports = function(webpackEnv) {
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.
-            // This loader doesn't use a "test" so it will catch all modules
+            // This loader doesn't use a "test" so it will catch all pages
             // that fall through the other loaders.
             {
               loader: require.resolve('file-loader'),
@@ -587,7 +587,7 @@ module.exports = function(webpackEnv) {
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
     ].filter(Boolean),
-    // Some libraries import Node modules but don't use them in the browser.
+    // Some libraries import Node pages but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.
     node: {
       module: 'empty',

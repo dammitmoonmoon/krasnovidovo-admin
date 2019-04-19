@@ -53,6 +53,7 @@
     "react-dev-utils": "^8.0.0",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
+    "reactstrap": "^8.0.0",
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
     "style-loader": "0.23.1",
@@ -162,6 +163,7 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^4.3.2",
+    "@types/reactstrap": "^8.0.1",
     "babel-plugin-styled-components": "^1.10.0",
     "lint-staged": "^8.1.5",
     "styled-components": "^4.2.0",

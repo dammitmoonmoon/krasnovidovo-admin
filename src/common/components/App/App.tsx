@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import {ApolloProvider} from "react-apollo";
 import {BrowserRouter} from "react-router-dom";
-import './App.css';
-import {apolloClient} from "./components/apolloClient";
-import {Main} from "./components/Main";
+import {apolloClient} from "../../apollo/apolloClient";
+import {Main} from "../Main";
 
 class App extends Component {
   public render() {
