@@ -166,6 +166,7 @@
     "@types/lodash": "^4.14.123",
     "@types/react-router-dom": "^4.3.2",
     "@types/reactstrap": "^8.0.1",
+    "@types/styled-components": "^4.1.14",
     "babel-plugin-styled-components": "^1.10.0",
     "lint-staged": "^8.1.5",
     "styled-components": "^4.2.0",

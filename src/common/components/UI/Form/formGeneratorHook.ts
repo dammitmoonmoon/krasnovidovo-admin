@@ -6,14 +6,13 @@
 import cloneDeep from "lodash/fp/cloneDeep";
 import React, {useRef, useState} from "react";
 import {FieldConfig} from "./FieldConfigMaker";
+import {Validators} from "./validators";
 
 interface Props {
-    formConfig: FieldConfig[][]
+    formConfig: FieldConfig[]
 }
 
-type FormData = FormGroupData[];
-
-interface FormGroupData {
+interface FormData {
     [key: string]: FormFieldData
 }
 
@@ -21,34 +20,31 @@ interface FormFieldData {
     value: string;
     valid: boolean;
     touched: boolean;
+    hint: string;
 }
 
-interface Validation {
-    [key: string]: ValidationFields
-}
-
-interface ValidationFields {
-    validators: string[],
-    hints: string[],
-}
 
 function useFormData(props: Props) {
     const [ formData, setFormData ] = useState(getFormDataFromConfig(props.formConfig));
-    const validationRef = useRef<Validation[]>();
-    const validation = createValidation(props.formConfig, validationRef);
+    const validationRef = useRef<Validators>();
+    const validator = createValidation(props.formConfig, validationRef);
 
     const updateFormData = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData(updateFormDataOnChange(formData, e));
+        setFormData(updateFormDataOnChange(formData, validator, e));
     };
     const config = getNewFormConfig(props.formConfig, formData);
-    return { config, updateFormData, validation };
+    return { config, updateFormData, validator };
 }
 
-function getFormDataFromConfig(formConfig: FieldConfig[][]): FormData {
-    return formConfig.map(group => group.reduce( (acc, curr) => ({...acc, ...getFormGroupFromConfig(curr)}), {}));
+function getFormDataFromConfig(formConfig: FieldConfig[]): FormData {
+    return formConfig.reduce((acc, curr) => ({...acc, ...getFormFromConfig(curr)}), {});
 }
 
-function createValidation(formConfig: FieldConfig[][], validationRef: React.MutableRefObject<Validation[]|undefined>) {
+function getFormValidationFromConfig(formConfig: FieldConfig[]): Validators {
+    return formConfig.reduce( (acc, curr) => ({...acc, ...getValidationFromConfig(curr)}), {});
+}
+
+function createValidation(formConfig: FieldConfig[], validationRef: React.MutableRefObject<Validators|undefined>) {
     const validation = validationRef.current;
     if (validation) {
         return validation;
@@ -59,65 +55,60 @@ function createValidation(formConfig: FieldConfig[][], validationRef: React.Muta
     return validationRef.current;
 }
 
-function updateFormDataOnChange (prevFormData: FormGroupData[], e: React.ChangeEvent<HTMLInputElement>): FormGroupData[] {
+function updateFormDataOnChange (prevFormData: FormData, validation: Validators, e: React.ChangeEvent<HTMLInputElement>): FormData {
     const formData = cloneDeep(prevFormData);
-    return formData.map(group => updateFormGroupDataInState(group, e));
+    const currentValidators = validation[e.target.name];
+    const firstFailedValidation = currentValidators.find(validator => !validator.cb(e.target.value, validator.params));
+
+    const updatedField = {
+        ...formData[e.target.name],
+        value: e.target.value,
+        touched: true,
+        hint: firstFailedValidation ? firstFailedValidation.hint : '',
+        valid: !firstFailedValidation,
+    };
+    formData[e.target.name] = updatedField;
+    return formData;
 }
 
-function getNewFormConfig(prevFormConfig: FieldConfig[][], formData: FormData ): FieldConfig[][] {
+function getNewFormConfig(prevFormConfig: FieldConfig[], formData: FormData ): FieldConfig[] {
     const formConfig = cloneDeep(prevFormConfig);
-    formConfig.forEach((formGroupConfig, index) => updateConfigByState(formGroupConfig, formData[index]));
+    const fieldNames = Object.keys(formConfig);
+    fieldNames.forEach(fieldName => changeCurrentFieldData(fieldName, formConfig, formData));
+    updateConfigByState(formConfig, formData);
     return formConfig;
 }
 
-function getFormGroupFromConfig(fieldConfig: FieldConfig): FormGroupData {
+function getFormFromConfig(fieldConfig: FieldConfig): FormData {
     const name = fieldConfig.inputParams.common.name;
-    const values = {...fieldConfig.inputData};
+    const values = {...fieldConfig.inputData, hint: ''};
     return {
         [name]: values
     }
 }
 
-function updateFormGroupDataInState(
-    prevFormGroupData: FormGroupData,
-    event: React.ChangeEvent<HTMLInputElement>,
-    ) {
-    const formGroupData = cloneDeep(prevFormGroupData);
-    const updatedField = {
-        ...formGroupData[event.target.name],
-        value: event.target.value,
-        touched: true,
-    };
-    formGroupData[event.target.name] = updatedField;
-    return formGroupData;
-}
-
-function updateConfigByState(formGroupConfig: FieldConfig[], formGroupData: FormGroupData) {
-    const fieldNames = Object.keys(formGroupData);
-    fieldNames.forEach(fieldName => changeCurrentFieldData(fieldName, formGroupConfig, formGroupData));
-}
-
-function changeCurrentFieldData (fieldName: string, formGroupConfig: FieldConfig[], formGroupData: FormGroupData) {
-    const currentFieldConfig = formGroupConfig.find(formConfig => formConfig.inputParams.common.name === fieldName);
-    if (currentFieldConfig) {
-        currentFieldConfig.inputData.value = formGroupData[fieldName].value;
-        currentFieldConfig.inputData.valid = formGroupData[fieldName].valid;
-        currentFieldConfig.inputData.touched = formGroupData[fieldName].touched;
-    }
-}
-
-function getFormValidationFromConfig(formConfig: FieldConfig[][]): Validation[] {
-    return formConfig.map(group => group.reduce( (acc, curr) => ({...acc, ...getGroupValidationFromConfig(curr)}), {}));
-}
-
-function getGroupValidationFromConfig(fieldConfig: FieldConfig): Validation {
+function getValidationFromConfig(fieldConfig: FieldConfig): Validators {
     const name = fieldConfig.inputParams.common.name;
-    const validation = <ValidationFields>{...fieldConfig.validation};
+    const validation = <any>[...fieldConfig.validators];
     return {
         [name]: validation
     }
 }
 
+function changeCurrentFieldData (fieldName: string, formGroupConfig: FieldConfig[], formGroupData: FormData) {
+    const currentFieldConfig = formGroupConfig.find(formConfig => formConfig.inputParams.common.name === fieldName);
+    if (currentFieldConfig) {
+        currentFieldConfig.inputData.value = formGroupData[fieldName].value;
+        currentFieldConfig.inputData.valid = formGroupData[fieldName].valid;
+        currentFieldConfig.inputData.touched = formGroupData[fieldName].touched;
+        currentFieldConfig.inputData.hint = formGroupData[fieldName].hint;
+    }
+}
+
+function updateConfigByState(formGroupConfig: FieldConfig[], formGroupData: FormData) {
+    const fieldNames = Object.keys(formGroupData);
+    fieldNames.forEach(fieldName => changeCurrentFieldData(fieldName, formGroupConfig, formGroupData));
+}
 
 export {
     useFormData

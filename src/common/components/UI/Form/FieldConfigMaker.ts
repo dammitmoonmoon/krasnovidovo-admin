@@ -1,4 +1,5 @@
 import {InputType} from "reactstrap/lib/Input";
+import {Validator} from "./validators";
 
 export interface FieldConfigPartial {
     inputParams: {
@@ -11,10 +12,7 @@ export interface FieldConfigPartial {
             displayValue: string;
         }[];
     };
-    validation?: {
-        validators: string[];
-        hints: string[];
-    };
+    validators: Validator[];
 }
 
 export interface FieldConfig {
@@ -22,6 +20,7 @@ export interface FieldConfig {
         value: string;
         valid: boolean;
         touched: boolean;
+        hint: string;
     },
     inputParams: {
         common: {
@@ -36,22 +35,20 @@ export interface FieldConfig {
             displayValue: string;
         }[];
     };
-    validation?: {
-        validators: string[];
-        hints: string[];
-    };
+    validators: Validator[];
 }
 
 export class FieldConfigMarker {
     public inputData: FieldConfig['inputData'];
     public inputParams: FieldConfig['inputParams'];
-    public validation: FieldConfig['validation'];
+    public validators: FieldConfig['validators'];
 
     public constructor(props: FieldConfigPartial) {
         this.inputData = {
             value: '',
             valid: false,
             touched: false,
+            hint: '',
         };
 
         this.inputParams = {
@@ -63,9 +60,6 @@ export class FieldConfigMarker {
                 ...props.inputParams.common
             },
         };
-
-        this.validation = props.validation ? {
-            ...props.validation,
-        } : void 0;
+        this.validators = props.validators || void 0;
     }
 }

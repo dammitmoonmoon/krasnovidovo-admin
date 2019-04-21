@@ -1,5 +1,6 @@
 import React from 'react';
 import {Input, InputProps, Label} from "reactstrap";
+import styled from "styled-components";
 import {FieldConfig} from "../Form/FieldConfigMaker";
 
 interface Props extends FieldConfig {
@@ -13,9 +14,18 @@ const ControlledInput: React.FC<Props> = props => {
         <div>
             <Label>{label}</Label>
             {inputElement}
+            {
+                props.inputData.touched && !props.inputData.valid
+                && <Hint>{props.inputData.hint}</Hint>
+            }
         </div>
     );
 };
+
+const Hint = styled.div`
+  font-size: 12px;
+  color: red;
+`;
 
 
 function inputTypeSelector(props: Props): JSX.Element {
@@ -48,9 +58,9 @@ function inputTypeSelector(props: Props): JSX.Element {
     return InputElement;
 }
 
-function getInputProps ({ inputData, validation, inputParams, changeHandler }: Props): InputProps {
-    const valid = validation ? (inputData.touched && inputData.valid) : void 0;
-    const invalid = validation ? (inputData.touched && !inputData.valid) : void 0;
+function getInputProps ({ inputData, validators, inputParams, changeHandler }: Props): InputProps {
+    const valid = validators ? (inputData.touched && inputData.valid) : void 0;
+    const invalid = validators ? (inputData.touched && !inputData.valid) : void 0;
 
     return {
         valid,

@@ -1,4 +1,5 @@
 import {FieldConfigMarker, FieldConfigPartial} from "../FieldConfigMaker";
+import {validators} from "../validators";
 
 const login: FieldConfigPartial = {
     inputParams: {
@@ -9,10 +10,7 @@ const login: FieldConfigPartial = {
             label: 'Логин',
         },
     },
-    validation: {
-        validators: ['required'],
-        hints: ['Это обязательное поле'],
-    },
+    validators: [validators.isRequired],
 };
 
  const password: FieldConfigPartial = {
@@ -24,13 +22,10 @@ const login: FieldConfigPartial = {
              label: 'Пароль',
          },
      },
-     validation: {
-         validators: ['required'],
-         hints: ['Это обязательное поле'],
-     },
+     validators: [validators.isRequired, validators.isNumber],
  };
 
-const authForm = [[login, password].map(config => new FieldConfigMarker(config))];
+const authForm = [login, password].map(config => new FieldConfigMarker(config));
 
 export {
     authForm
