@@ -1,6 +1,6 @@
 import React from 'react';
 import {Input, InputProps, Label} from "reactstrap";
-import {FieldConfig} from "../Form/fieldValues";
+import {FieldConfig} from "../Form/FieldConfigMaker";
 
 interface Props extends FieldConfig {
     changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -49,9 +49,8 @@ function inputTypeSelector(props: Props): JSX.Element {
 }
 
 function getInputProps ({ inputData, validation, inputParams, changeHandler }: Props): InputProps {
-    const hasValidators = validation.validators.length > 0;
-    const valid = hasValidators ? (inputData.touched && inputData.valid) : void 0;
-    const invalid = hasValidators ? (inputData.touched && !inputData.valid) : void 0;
+    const valid = validation ? (inputData.touched && inputData.valid) : void 0;
+    const invalid = validation ? (inputData.touched && !inputData.valid) : void 0;
 
     return {
         valid,

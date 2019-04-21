@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 import { FormGroup } from "reactstrap";
 import {ControlledInput} from "../Input/Input";
-import {FieldConfig} from "./fieldValues";
+import {FieldConfig} from "./FieldConfigMaker";
 
 interface Props {
     formConfig: FieldConfig[][]
 }
-
 
 interface FormGroupData {
     [key: string]: {
@@ -16,13 +15,18 @@ interface FormGroupData {
     }
 }
 
+interface Validation {
+    validators: string[];
+    hints: string[];
+}
+
 const FormGenerator: React.FC<Props>  = (props: Props) => {
     const initialState: FormGroupData[] = getStateFromConfig(props.formConfig);
     const [ formData, setFormData ] = useState(initialState);
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData(formData.map(group => updateValueInState(group, e)));
     };
-    props.formConfig.map((formGroupConfig, index) => updateConfigByState(formGroupConfig, formData[index]));
+    props.formConfig.forEach((formGroupConfig, index) => updateConfigByState(formGroupConfig, formData[index]));
     return (
         <>
             {

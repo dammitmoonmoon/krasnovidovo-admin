@@ -3,7 +3,7 @@ import {RouterProps} from "react-router";
 import {withRouter} from 'react-router-dom';
 import {Button, Col, Form, Row} from "reactstrap";
 import {FormGenerator} from "../../common/components/UI/Form/FormGenerator";
-import {authForm} from "../../common/components/UI/Form/formValues";
+import {authForm} from "../../common/components/UI/Form/forms/authorization";
 import {Paths} from "../../common/RouteMap";
 
 interface Props extends RouterProps {}
