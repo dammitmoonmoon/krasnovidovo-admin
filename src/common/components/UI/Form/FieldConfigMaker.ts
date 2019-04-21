@@ -42,7 +42,7 @@ export interface FieldConfig {
     };
 }
 
-export class FieldConfigMarker implements FieldConfig {
+export class FieldConfigMarker {
     public inputData: FieldConfig['inputData'];
     public inputParams: FieldConfig['inputParams'];
     public validation: FieldConfig['validation'];

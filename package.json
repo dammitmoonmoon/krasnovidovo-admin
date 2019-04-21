@@ -15,7 +15,7 @@
     "apollo-link": "^1.2.11",
     "apollo-link-http": "^1.5.14",
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "9.0.0",
+    "babel-eslint": "^10.0.1",
     "babel-jest": "23.6.0",
     "babel-loader": "8.0.5",
     "babel-plugin-named-asset-import": "^0.3.1",
@@ -41,6 +41,7 @@
     "jest-pnp-resolver": "1.0.2",
     "jest-resolve": "23.6.0",
     "jest-watch-typeahead": "^0.2.1",
+    "lodash": "^4.17.11",
     "mini-css-extract-plugin": "0.5.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.2.1",
@@ -70,7 +71,7 @@
   },
   "scripts": {
     "dev": "node scripts/start.js",
-    "dev-pretty": "yarn lint:ts && yarn lint:css && node scripts/start.js",
+    "dev-lint": "yarn lint:ts && yarn lint:css && node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "lint:ts": "tslint -t codeFrame --project tsconfig.json ./{src,@types,config}/**/*.{ts,tsx} && tsc --project tsconfig.json",
@@ -147,7 +148,6 @@
   },
   "lint-staged": {
     "*.js": [
-      "eslint --fix",
       "git add"
     ],
     "*.{ts,tsx}": [
@@ -163,6 +163,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.123",
     "@types/react-router-dom": "^4.3.2",
     "@types/reactstrap": "^8.0.1",
     "babel-plugin-styled-components": "^1.10.0",

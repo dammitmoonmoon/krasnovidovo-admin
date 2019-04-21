@@ -8,7 +8,7 @@ import {Paths} from "../../common/RouteMap";
 
 interface Props extends RouterProps {}
 
-const Authorization: React.FC<Props>  = ({history}: RouterProps) => {
+const Authorization: React.FC<Props>  = ({history}) => {
     return (
         <Row>
             <Col sm="12" md={{ size: 4, offset: 4 }}>
