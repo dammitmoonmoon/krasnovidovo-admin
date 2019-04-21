@@ -2,71 +2,66 @@ import {InputType} from "reactstrap/lib/Input";
 
 export interface FieldConfig  {
     inputData: {
+        value: string;
+        valid: boolean;
+        touched: boolean;
+    },
+    inputParams: {
         common: {
             [key: string]: string;
             name: string;
-            value: string;
             placeholder: string;
             label: string;
+            type: InputType;
         };
-        custom: {
-            options?: {
-                value: string;
-                displayValue: string;
-            }[];
-        }
+        options?: {
+            value: string;
+            displayValue: string;
+        }[];
     };
-    inputConfig: {
-        inputType: InputType;
-    };
-    inputControl: {
-        validation: {
-            validators: string[];
-            valid: boolean;
-            hint?: string;
-        };
+    validation: {
+        validators: string[];
+        hints: string[];
     };
  }
 
  const login: FieldConfig = {
     inputData: {
+        value: '',
+        valid: false,
+        touched: false,
+    },
+    inputParams: {
         common: {
+            type: 'text',
             name: 'login',
-            value: '',
             placeholder: 'Введите логин',
             label: 'Логин',
         },
-        custom: {},
     },
-    inputConfig: {
-        inputType: 'text',
-    },
-    inputControl: {
-        validation: {
-            validators: ['required'],
-            valid: false,
-        },
+    validation: {
+        validators: ['required'],
+        hints: ['Это обязательное поле'],
     },
  };
 
  const password: FieldConfig = {
      inputData: {
+         value: '',
+         valid: false,
+         touched: false,
+     },
+     inputParams: {
          common: {
+             type: 'password',
              name: 'password',
-             value: '',
              placeholder: 'Введите пароль',
              label: 'Пароль',
          },
-         custom: {},
      },
-     inputConfig: {
-         inputType: 'password',
-     },
-     inputControl: {
-         validation: {
-             validators: ['required'],
-             valid: false,
-         },
+     validation: {
+         validators: ['required'],
+         hints: ['Это обязательное поле'],
      },
  };
 

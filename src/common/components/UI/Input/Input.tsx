@@ -2,9 +2,13 @@ import React from 'react';
 import {Input, InputProps, Label} from "reactstrap";
 import {FieldConfig} from "../Form/fieldValues";
 
-const ControlledInput: React.FC<FieldConfig> = (props: FieldConfig) => {
+interface Props extends FieldConfig {
+    changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const ControlledInput: React.FC<Props> = props => {
     const inputElement = inputTypeSelector(props);
-    const label = props.inputData.common.label;
+    const label = props.inputParams.common.label;
     return (
         <div>
             <Label>{label}</Label>
@@ -14,14 +18,13 @@ const ControlledInput: React.FC<FieldConfig> = (props: FieldConfig) => {
 };
 
 
-function inputTypeSelector(props: FieldConfig): JSX.Element {
+function inputTypeSelector(props: Props): JSX.Element {
     let InputElement: JSX.Element = <></>;
     const inputProps = getInputProps(props);
-    const selectorOptions = props.inputData.custom.options || [];
-    switch (props.inputConfig.inputType) {
+    const selectorOptions = props.inputParams.options || [];
+    switch (props.inputParams.common.type) {
         case ('select'):
             InputElement = (<Input
-                type="select"
                 {...inputProps}
             >
                 {
@@ -45,20 +48,18 @@ function inputTypeSelector(props: FieldConfig): JSX.Element {
     return InputElement;
 }
 
-function getInputProps ({ inputData, inputControl, inputConfig}: FieldConfig): InputProps {
-    const validation = inputControl.validation;
-    const commonInputData = inputData.common;
-
+function getInputProps ({ inputData, validation, inputParams, changeHandler }: Props): InputProps {
     const hasValidators = validation.validators.length > 0;
-    const valid = hasValidators ? validation.valid : void 0;
-    const invalid = hasValidators ? !validation.valid : void 0;
+    const valid = hasValidators ? (inputData.touched && inputData.valid) : void 0;
+    const invalid = hasValidators ? (inputData.touched && !inputData.valid) : void 0;
 
     return {
         valid,
         invalid,
-        type: inputConfig.inputType,
-        key: commonInputData.name,
-        ...commonInputData,
+        key: inputParams.common.name,
+        value: inputData.value,
+        onChange: changeHandler,
+        ...inputParams.common,
     }
 }
 

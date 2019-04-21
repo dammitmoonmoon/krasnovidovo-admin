@@ -12,6 +12,7 @@ const Main = () => (
                         path={route.path}
                         name={route.name}
                         component={route.component}
+                        key={route.name}
                     />
                 ))
             }
