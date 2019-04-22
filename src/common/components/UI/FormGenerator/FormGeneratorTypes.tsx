@@ -38,28 +38,23 @@ export interface FieldConfig {
     validators: Validator[];
 }
 
-export class FieldConfigMarker {
-    public inputData: FieldConfig['inputData'];
-    public inputParams: FieldConfig['inputParams'];
-    public validators: FieldConfig['validators'];
+export interface FormDataHookProps {
+    formConfig: FieldConfig[]
+}
 
-    public constructor(props: FieldConfigPartial) {
-        this.inputData = {
-            value: '',
-            valid: false,
-            touched: false,
-            hint: '',
-        };
+export interface FormData {
+    [key: string]: FormFieldData
+}
 
-        this.inputParams = {
-            ...props.inputParams,
-            common: {
-                placeholder: '',
-                label: '',
-                type: 'text',
-                ...props.inputParams.common
-            },
-        };
-        this.validators = props.validators || void 0;
-    }
+interface FormFieldData {
+    value: string;
+    valid: boolean;
+    touched: boolean;
+    hint: string;
+}
+
+export interface FormGeneratorProps {
+    formConfig: FieldConfig[],
+    submitHandler: (props: FormData) => void;
+    buttonName: string;
 }

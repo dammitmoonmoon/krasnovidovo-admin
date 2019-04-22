@@ -1,58 +1,43 @@
 /* Glossary:
-* FieldConfig[][] - data describing several form groups as a collection of Input elements
-* FormData, FormGroupData, FormFieldData - transformed and flattened FieldConfig stored in state
+* FieldConfig[] - data describing several form groups as a collection of ControlledInput elements
+* FormData, FormFieldData - transformed and flattened FieldConfig partial stored in state
 **/
 
 import cloneDeep from "lodash/fp/cloneDeep";
 import React, {useRef, useState} from "react";
-import {FieldConfig} from "./FieldConfigMaker";
+import {FieldConfig, FormData, FormDataHookProps} from "./FormGeneratorTypes";
 import {FieldValidators} from "./validators";
 
-interface Props {
-    formConfig: FieldConfig[]
-}
 
-export interface FormData {
-    [key: string]: FormFieldData
-}
-
-interface FormFieldData {
-    value: string;
-    valid: boolean;
-    touched: boolean;
-    hint: string;
-}
-
-
-function useFormData(props: Props) {
+function useFormData(props: FormDataHookProps) {
     const [ formData, setFormData ] = useState(getFormDataFromConfig(props.formConfig));
     const validationRef = useRef<FieldValidators>();
-    const validator = createValidation(props.formConfig, validationRef);
+    const validators = obtainFieldValidatorsConstant(props.formConfig, validationRef);
 
     const updateFormData = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData(updateFormDataOnChange(formData, validator, e));
+        setFormData(updateFormDataOnChange(formData, validators, e));
     };
-    const config = getNewFormConfig(props.formConfig, formData);
+    const config = updateFormConfig(props.formConfig, formData);
     return { config, updateFormData, formData };
 }
 
 function getFormDataFromConfig(formConfig: FieldConfig[]): FormData {
-    return formConfig.reduce((acc, curr) => ({...acc, ...getFormFromConfig(curr)}), {});
+    return formConfig.reduce((acc, curr) => ({...acc, ...generateFormDataPerFieldFromConfig(curr)}), {});
 }
 
-function getFormValidationFromConfig(formConfig: FieldConfig[]): FieldValidators {
-    return formConfig.reduce( (acc, curr) => ({...acc, ...getValidationFromConfig(curr)}), {});
-}
-
-function createValidation(formConfig: FieldConfig[], validationRef: React.MutableRefObject<FieldValidators|undefined>) {
+function obtainFieldValidatorsConstant(formConfig: FieldConfig[], validationRef: React.MutableRefObject<FieldValidators|undefined>) {
     const validation = validationRef.current;
     if (validation) {
         return validation;
     }
 
-    const validationData = getFormValidationFromConfig(formConfig);
+    const validationData = generateFieldValidatorsFromConfig(formConfig);
     validationRef.current = validationData;
     return validationRef.current;
+}
+
+function generateFieldValidatorsFromConfig(formConfig: FieldConfig[]): FieldValidators {
+  return formConfig.reduce( (acc, curr) => ({...acc, ...generateValidatorsPerFieldFromConfig(curr)}), {});
 }
 
 function updateFormDataOnChange (prevFormData: FormData, validators: FieldValidators, e: React.ChangeEvent<HTMLInputElement>): FormData {
@@ -71,15 +56,14 @@ function updateFormDataOnChange (prevFormData: FormData, validators: FieldValida
     return formData;
 }
 
-function getNewFormConfig(prevFormConfig: FieldConfig[], formData: FormData ): FieldConfig[] {
+function updateFormConfig(prevFormConfig: FieldConfig[], formData: FormData ): FieldConfig[] {
     const formConfig = cloneDeep(prevFormConfig);
-    const fieldNames = Object.keys(formConfig);
-    fieldNames.forEach(fieldName => changeCurrentFieldData(fieldName, formConfig, formData));
-    updateConfigByState(formConfig, formData);
+    const fieldNames = Object.keys(formData);
+    fieldNames.forEach(fieldName => updateCurrentFieldConfig(fieldName, formConfig, formData));
     return formConfig;
 }
 
-function getFormFromConfig(fieldConfig: FieldConfig): FormData {
+function generateFormDataPerFieldFromConfig(fieldConfig: FieldConfig): FormData {
     const name = fieldConfig.inputParams.common.name;
     const values = {...fieldConfig.inputData, hint: ''};
     return {
@@ -87,14 +71,14 @@ function getFormFromConfig(fieldConfig: FieldConfig): FormData {
     }
 }
 
-function getValidationFromConfig(fieldConfig: FieldConfig): FieldValidators {
+function generateValidatorsPerFieldFromConfig(fieldConfig: FieldConfig): FieldValidators {
     const name = fieldConfig.inputParams.common.name;
     return {
         [name]: fieldConfig.validators
     }
 }
 
-function changeCurrentFieldData (fieldName: string, formGroupConfig: FieldConfig[], formGroupData: FormData) {
+function updateCurrentFieldConfig (fieldName: string, formGroupConfig: FieldConfig[], formGroupData: FormData) {
     const currentFieldConfig = formGroupConfig.find(formConfig => formConfig.inputParams.common.name === fieldName);
     if (currentFieldConfig) {
         currentFieldConfig.inputData.value = formGroupData[fieldName].value;
@@ -102,11 +86,6 @@ function changeCurrentFieldData (fieldName: string, formGroupConfig: FieldConfig
         currentFieldConfig.inputData.touched = formGroupData[fieldName].touched;
         currentFieldConfig.inputData.hint = formGroupData[fieldName].hint;
     }
-}
-
-function updateConfigByState(formGroupConfig: FieldConfig[], formGroupData: FormData) {
-    const fieldNames = Object.keys(formGroupData);
-    fieldNames.forEach(fieldName => changeCurrentFieldData(fieldName, formGroupConfig, formGroupData));
 }
 
 export {

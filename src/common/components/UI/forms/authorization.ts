@@ -1,5 +1,6 @@
-import {FieldConfigMarker, FieldConfigPartial} from "../FieldConfigMaker";
-import {isRequired, ValidatorHints } from "../validators";
+import {FieldConfigMarker} from "../FormGenerator/FieldConfigMaker";
+import {FieldConfigPartial} from "../FormGenerator/FormGeneratorTypes";
+import {isRequired, ValidatorHints } from "../FormGenerator/validators";
 
 const login: FieldConfigPartial = {
     inputParams: {
