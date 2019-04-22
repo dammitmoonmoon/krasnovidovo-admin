@@ -12,7 +12,7 @@ interface Props {
     formConfig: FieldConfig[]
 }
 
-interface FormData {
+export interface FormData {
     [key: string]: FormFieldData
 }
 
@@ -28,13 +28,12 @@ function useFormData(props: Props) {
     const [ formData, setFormData ] = useState(getFormDataFromConfig(props.formConfig));
     const validationRef = useRef<FieldValidators>();
     const validator = createValidation(props.formConfig, validationRef);
-    console.log('validator', validator);
 
     const updateFormData = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData(updateFormDataOnChange(formData, validator, e));
     };
     const config = getNewFormConfig(props.formConfig, formData);
-    return { config, updateFormData, validator };
+    return { config, updateFormData, formData };
 }
 
 function getFormDataFromConfig(formConfig: FieldConfig[]): FormData {
@@ -111,5 +110,5 @@ function updateConfigByState(formGroupConfig: FieldConfig[], formGroupData: Form
 }
 
 export {
-    useFormData
+    useFormData,
 };

@@ -1,5 +1,5 @@
 import {FieldConfigMarker, FieldConfigPartial} from "../FieldConfigMaker";
-import {isInRange, isNumeric, isRequired, ValidatorHints } from "../validators";
+import {isRequired, ValidatorHints } from "../validators";
 
 const login: FieldConfigPartial = {
     inputParams: {
@@ -32,15 +32,6 @@ const login: FieldConfigPartial = {
          {
              validator: isRequired,
              hint: ValidatorHints.REQUIRED
-         },
-         {
-             validator: isNumeric,
-             hint: ValidatorHints.NUMERIC
-         },
-         {
-             validator: isInRange,
-             hint: `Введите число в диапазоне от 0 до 10`,
-             params: {min: 0, max: 10}
          },
      ],
  };

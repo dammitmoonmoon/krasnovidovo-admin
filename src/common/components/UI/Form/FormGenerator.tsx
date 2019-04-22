@@ -1,25 +1,29 @@
 import React from 'react';
-import { FormGroup } from "reactstrap";
+import {Button, Form, FormGroup} from "reactstrap";
 import {ControlledInput} from "../Input/Input";
 import {FieldConfig} from "./FieldConfigMaker";
-import {useFormData} from "./formGeneratorHook";
+import {FormData, useFormData} from "./formGeneratorHook";
 
 interface Props {
-    formConfig: FieldConfig[]
+    formConfig: FieldConfig[],
+    submitHandler: (props: FormData) => void;
 }
 
 const FormGenerator: React.FC<Props>  = (props: Props) => {
-    const {config, updateFormData} = useFormData(props);
+    const {config, updateFormData, formData} = useFormData(props);
     return (
-        <FormGroup>
-            {
-                config.map((item, index) =>(
-                    <ControlledInput
-                        {...item} changeHandler={updateFormData} key={index}
-                    />
-                ))
-            }
-        </FormGroup>
+        <Form>
+            <FormGroup>
+                {
+                    config.map((item, index) =>(
+                        <ControlledInput
+                            {...item} changeHandler={updateFormData} key={index}
+                        />
+                    ))
+                }
+            </FormGroup>
+            <Button onClick={() => props.submitHandler(formData)}>Войти</Button>
+        </Form>
     );
 };
 
