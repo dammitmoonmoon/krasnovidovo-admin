@@ -6,7 +6,7 @@
 import cloneDeep from "lodash/fp/cloneDeep";
 import React, {useRef, useState} from "react";
 import {FieldConfig} from "./FieldConfigMaker";
-import {Validators} from "./validators";
+import {FieldValidators} from "./validators";
 
 interface Props {
     formConfig: FieldConfig[]
@@ -26,8 +26,9 @@ interface FormFieldData {
 
 function useFormData(props: Props) {
     const [ formData, setFormData ] = useState(getFormDataFromConfig(props.formConfig));
-    const validationRef = useRef<Validators>();
+    const validationRef = useRef<FieldValidators>();
     const validator = createValidation(props.formConfig, validationRef);
+    console.log('validator', validator);
 
     const updateFormData = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData(updateFormDataOnChange(formData, validator, e));
@@ -40,11 +41,11 @@ function getFormDataFromConfig(formConfig: FieldConfig[]): FormData {
     return formConfig.reduce((acc, curr) => ({...acc, ...getFormFromConfig(curr)}), {});
 }
 
-function getFormValidationFromConfig(formConfig: FieldConfig[]): Validators {
+function getFormValidationFromConfig(formConfig: FieldConfig[]): FieldValidators {
     return formConfig.reduce( (acc, curr) => ({...acc, ...getValidationFromConfig(curr)}), {});
 }
 
-function createValidation(formConfig: FieldConfig[], validationRef: React.MutableRefObject<Validators|undefined>) {
+function createValidation(formConfig: FieldConfig[], validationRef: React.MutableRefObject<FieldValidators|undefined>) {
     const validation = validationRef.current;
     if (validation) {
         return validation;
@@ -55,10 +56,10 @@ function createValidation(formConfig: FieldConfig[], validationRef: React.Mutabl
     return validationRef.current;
 }
 
-function updateFormDataOnChange (prevFormData: FormData, validation: Validators, e: React.ChangeEvent<HTMLInputElement>): FormData {
+function updateFormDataOnChange (prevFormData: FormData, validators: FieldValidators, e: React.ChangeEvent<HTMLInputElement>): FormData {
     const formData = cloneDeep(prevFormData);
-    const currentValidators = validation[e.target.name];
-    const firstFailedValidation = currentValidators.find(validator => !validator.cb(e.target.value, validator.params));
+    const currentValidators = validators[e.target.name];
+    const firstFailedValidation = currentValidators.find(validator => !validator.validator(e.target.value, validator.params));
 
     const updatedField = {
         ...formData[e.target.name],
@@ -87,11 +88,10 @@ function getFormFromConfig(fieldConfig: FieldConfig): FormData {
     }
 }
 
-function getValidationFromConfig(fieldConfig: FieldConfig): Validators {
+function getValidationFromConfig(fieldConfig: FieldConfig): FieldValidators {
     const name = fieldConfig.inputParams.common.name;
-    const validation = <any>[...fieldConfig.validators];
     return {
-        [name]: validation
+        [name]: fieldConfig.validators
     }
 }
 

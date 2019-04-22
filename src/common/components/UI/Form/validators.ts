@@ -1,34 +1,34 @@
-export type ValidatorCB<T=any, U=(string|number)[]> = (value: T, props?: U) => boolean;
+export type ValidatorCB<T=any, U=any> = (value: T, props?: U) => boolean;
 
-export interface ValidatorCollection {
-    [key: string]: Validator
-}
-
-export interface Validators {
-    [key: string]: Validator[]
+export interface FieldValidators {
+    [key: string]: Validator[],
 }
 
 export interface Validator {
-    cb: ValidatorCB;
+    validator: ValidatorCB,
+    params?: any;
     hint: string;
-    params?: (string|number)[];
 }
 
-const isRequired: ValidatorCB = (value) => !!value;
+const isRequired: ValidatorCB<string|number> = (value): boolean => !!value;
 
-const isNumeric: ValidatorCB = (value) => !isNaN(value);
+const isNumeric: ValidatorCB<any> = (value): boolean => !!value && !isNaN(Number(value));
 
-const validators: ValidatorCollection = {
-    isRequired: {
-        cb: isRequired,
-        hint: 'Это обязательное поле',
-    },
-    isNumber: {
-        cb: isNumeric,
-        hint: 'Требуется ввести числовое значение',
-    },
+const isInRange: ValidatorCB<any, {min: number, max: number}> = (value, range) => {
+    if (isNaN(value) || !range) {
+        return false;
+    }
+    return value >= range.min && value <= range.max;
 };
 
+enum ValidatorHints {
+    REQUIRED = "Введите значение",
+    NUMERIC = "Введите число",
+}
+
 export {
-    validators,
+    isRequired,
+    isNumeric,
+    isInRange,
+    ValidatorHints,
 };
