@@ -1,6 +1,8 @@
 import {InputType} from "reactstrap/lib/Input";
 import {Validator} from "./validators";
 
+export type Value = string;
+
 export interface FieldConfigPartial {
     inputParams: {
         common: {
@@ -8,7 +10,7 @@ export interface FieldConfigPartial {
             name: string;
         };
         options?: {
-            value: string;
+            value: Value;
             displayValue: string;
         }[];
     };
@@ -17,7 +19,7 @@ export interface FieldConfigPartial {
 
 export interface FieldConfig {
     inputData: {
-        value: string;
+        value: Value;
         valid: boolean;
         touched: boolean;
         hint: string;
@@ -47,14 +49,18 @@ export interface FormData {
 }
 
 interface FormFieldData {
-    value: string;
+    value: Value;
     valid: boolean;
     touched: boolean;
     hint: string;
 }
 
+export interface FieldValuePairs {
+    [key: string]: Value;
+}
+
 export interface FormGeneratorProps {
     formConfig: FieldConfig[],
-    submitHandler: (props: FormData) => void;
+    submitHandler: (props: FieldValuePairs) => void;
     buttonName: string;
 }

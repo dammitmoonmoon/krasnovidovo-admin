@@ -17,7 +17,9 @@ function useFormData(props: FormDataHookProps) {
     const updateFormData = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData(updateFormDataOnChange(formData, validators, e));
     };
+
     const config = updateFormConfig(props.formConfig, formData);
+
     return { config, updateFormData, formData };
 }
 
