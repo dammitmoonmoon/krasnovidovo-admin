@@ -9,20 +9,18 @@ import {authForm} from "../../common/components/UI/forms/authorization";
 import {GetCurrentUser} from "./apolloTypes/GetCurrentUser";
 import {Login, LoginVariables} from "./apolloTypes/Login";
 
-interface Props extends RouteComponentProps {
+interface Props extends RouteComponentProps<{}> {
     currentUserData: QueryResult<GetCurrentUser>,
     loginData: MutationResult<Login>,
     login: MutationFn<Login, LoginVariables>
 }
 
+
+// TODO: reconsider unknown
 const Authorization: React.FC<Props>  = (props) => {
-    // const [apolloData, setApolloData] = useState<FieldValuePairs>();
     const sendData = async (data: FieldValuePairs) => {
-        console.log('data', data);
-      // @ts-ignore
-        const result = await props.login({variables: data});
-      console.log('result', result);
-      console.log('sendData', sendData);
+      await props.login({variables: (data as unknown as LoginVariables)});
+      props.history.push('/home');
     };
     return (
         <Row>

@@ -29,7 +29,7 @@ const AuthorizationConnected: React.FunctionComponent<{}> = () => (
             </LoginMutation>
         )}
     </GetCurrentUserQuery>
-)
+);
 
 export {
     AuthorizationConnected

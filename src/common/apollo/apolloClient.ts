@@ -10,7 +10,7 @@ const apolloClient = new ApolloClient({
         ssrMode: true,
         link: new HttpLink({
             uri: GRAPHQL_ENDPOINT,
-            credentials: 'same-origin',
+            credentials: 'include',
         }),
         cache: cache.restore((window as any).__APOLLO_STATE__),
     });
