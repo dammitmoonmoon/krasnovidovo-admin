@@ -1,1 +1,1 @@
-export { Authorization } from './Authorization';
+export {AuthorizationConnected as Authorization } from './AuthorizationConnected';

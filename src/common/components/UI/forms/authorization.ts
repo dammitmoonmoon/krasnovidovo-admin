@@ -6,9 +6,9 @@ const login: FieldConfigPartial = {
     inputParams: {
         common: {
             type: 'text',
-            name: 'login',
-            placeholder: 'Введите логин',
-            label: 'Логин',
+            name: 'username',
+            placeholder: 'Введите имя пользователя',
+            label: 'Имя пользователя',
         },
 
     },

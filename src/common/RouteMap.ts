@@ -1,11 +1,10 @@
-import * as React from "react";
 import {Authorization} from "../pages/Authorization";
 
 interface RouteMap {
     path: string;
     exact: boolean;
     name: string;
-    component: React.ComponentClass;
+    component: any;
 }
 
 const Paths = {
