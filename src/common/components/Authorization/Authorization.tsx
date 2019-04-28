@@ -1,26 +1,26 @@
 import React from 'react';
-import {MutationFn, MutationResult, QueryResult} from "react-apollo";
+import {MutationFn, MutationResult} from "react-apollo";
 import {RouteComponentProps} from "react-router";
 import {withRouter} from 'react-router-dom';
 import { Col, Row} from "reactstrap";
-import {FormGenerator} from "../../common/components/UI/FormGenerator/FormGenerator";
-import {FieldValuePairs } from "../../common/components/UI/FormGenerator/FormGeneratorTypes";
-import {authForm} from "../../common/components/UI/forms/authorization";
-import {GetCurrentUser} from "./apolloTypes/GetCurrentUser";
+import {FormGenerator} from "../UI/FormGenerator/FormGenerator";
+import {FieldValuePairs } from "../UI/FormGenerator/FormGeneratorTypes";
+import {authForm} from "../UI/forms/authorization";
 import {Login, LoginVariables} from "./apolloTypes/Login";
 
 interface Props extends RouteComponentProps<{}> {
-    currentUserData: QueryResult<GetCurrentUser>,
-    loginData: MutationResult<Login>,
-    login: MutationFn<Login, LoginVariables>
+    loginData: MutationResult<Login>;
+    login: MutationFn<Login, LoginVariables>;
 }
 
 
 // TODO: reconsider unknown
-const Authorization: React.FC<Props>  = (props) => {
+const Authorization: React.FC<Props>  = ({login}) => {
     const sendData = async (data: FieldValuePairs) => {
-      await props.login({variables: (data as unknown as LoginVariables)});
-      props.history.push('/home');
+      const result = await login({variables: (data as unknown as LoginVariables)});
+      if (result && result.data) {
+        location.reload();
+      }
     };
     return (
         <Row>

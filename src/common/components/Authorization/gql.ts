@@ -21,7 +21,11 @@ const LOGIN = gql`
                 password: $password,
             }
         )
-    }
+        {
+            username
+            role
+        }
+    } 
 `;
 
 export {
