@@ -1,4 +1,4 @@
-import {Test} from "../../../modules/test";
+import {Dummy} from "../../../modules/Dummy";
 
 interface Routes {
     path: string;
@@ -16,8 +16,8 @@ const routes: Routes[] = [
     {
         path: Paths.INITIAL,
         exact: true,
-        name: 'Test',
-        component: Test,
+        name: 'Dummy',
+        component: Dummy,
     },
 ];
 

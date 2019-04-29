@@ -2,7 +2,7 @@ import React from "react";
 import {LogoutButton} from "../common/components/Logout";
 
 
-const Test: React.FC<{}> = () => (
+const Dummy: React.FC<{}> = () => (
     <div>
       TEST PAGE
       <LogoutButton />
@@ -10,5 +10,5 @@ const Test: React.FC<{}> = () => (
 );
 
 export {
-  Test
+  Dummy
 };
