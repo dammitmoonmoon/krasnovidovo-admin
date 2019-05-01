@@ -36,4 +36,4 @@ const LogoutButton = ({history}: Props) => (
 );
 
 const LogoutButtonRouted = withRouter(LogoutButton);
-export {LogoutButtonRouted as LogoutButton};
+export {LogoutButton, LogoutButtonRouted};

@@ -1,6 +1,10 @@
 import {FieldConfig, FieldConfigPartial} from "./FormGeneratorTypes";
 
-export class FieldConfigMarker {
+export class ConfigMarker {
+    public static makeForm(fieldConfigPartials: FieldConfigPartial[]): FieldConfig[] {
+        return fieldConfigPartials.map(config => new ConfigMarker(config));
+    }
+
     public inputData: FieldConfig['inputData'];
     public inputParams: FieldConfig['inputParams'];
     public validators: FieldConfig['validators'];

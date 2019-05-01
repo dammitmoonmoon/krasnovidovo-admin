@@ -92,7 +92,6 @@
       "react-app-polyfill/jsdom"
     ],
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
       "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
     ],
     "testEnvironment": "jsdom",
@@ -163,13 +162,13 @@
     "@types/styled-components": "^4.1.14",
     "babel-plugin-styled-components": "^1.10.0",
     "lint-staged": "^8.1.5",
+    "prettier": "^1.17.0",
     "styled-components": "^4.2.0",
     "stylelint": "^10.0.0",
     "stylelint-config-standard": "^18.3.0",
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-processor-styled-components": "^1.6.0",
-    "tslint": "^5.15.0",
-    "waait": "^1.0.4"
+    "tslint": "^5.15.0"
   },
   "scripts": {
     "dev": "node scripts/start.js",
