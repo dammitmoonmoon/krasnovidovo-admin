@@ -1,6 +1,7 @@
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
-import { HttpLink } from 'apollo-link-http';
+import { createUploadLink } from 'apollo-upload-client'
+
 
 const GRAPHQL_ENDPOINT = 'http://localhost:4000/graphql';
 
@@ -8,7 +9,7 @@ const cache = new InMemoryCache();
 
 const apolloClient = new ApolloClient({
         ssrMode: true,
-        link: new HttpLink({
+        link: createUploadLink({
             uri: GRAPHQL_ENDPOINT,
             credentials: 'include',
         }),
