@@ -1,9 +1,9 @@
 import {configure, shallow} from "enzyme";
 import Adapter from 'enzyme-adapter-react-16';
 import * as React from "react";
-import {ConfigMarker} from "../ConfigMaker";
-import {extractFormDataFromFieldConfig, FormDataHookResult, useFormData} from "../formGeneratorHook";
-import {FieldConfig} from "../FormGeneratorTypes";
+import {ConfigMarker} from "./ConfigMaker";
+import {extractFormDataFromFieldConfig, FormDataHookResult, useFormData} from "./formGeneratorHook";
+import {FieldConfig} from "./FormGeneratorTypes";
 import {
   fieldConfigBrief,
   fieldConfigLong,

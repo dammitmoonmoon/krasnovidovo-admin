@@ -1,8 +1,8 @@
 import * as React from "react";
-import {ConfigMarker} from "../ConfigMaker";
-import {extractFormDataFromFieldConfig, FormDataHookResult} from "../formGeneratorHook";
-import {FieldConfig, FieldConfigPartial, FormData, FormDataHookProps} from "../FormGeneratorTypes";
-import {isRequired, ValidatorHints} from "../validators";
+import {ConfigMarker} from "./ConfigMaker";
+import {extractFormDataFromFieldConfig, FormDataHookResult} from "./formGeneratorHook";
+import {FieldConfig, FieldConfigPartial, FormData, FormDataHookProps} from "./FormGeneratorTypes";
+import {isRequired, ValidatorHints} from "./validators";
 
 interface HookWrapperProps {
   hook: (props: FormDataHookProps) => FormDataHookResult;

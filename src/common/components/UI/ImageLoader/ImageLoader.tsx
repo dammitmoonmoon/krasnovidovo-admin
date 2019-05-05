@@ -1,46 +1,48 @@
-import React, {useRef} from 'react';
-import { Mutation } from 'react-apollo';
-import {Form, Input} from 'reactstrap';
-import {UploadImage, UploadImageVariables} from "./apolloTypes/UploadImage";
-import {UPLOAD_IMAGE} from "./gql";
+import React, { useState } from 'react';
+import { Mutation, MutationFn } from 'react-apollo';
+import {Button, Form, Input, Spinner} from 'reactstrap';
+import { getGQLErrorMessages } from '../../../apollo/errors';
+import { Hint } from '../misc';
+import { UploadImage, UploadImageVariables } from './apolloTypes/UploadImage';
+import { UPLOAD_IMAGE } from './gql';
+import { Image } from './styles';
 
-class UploadImageMutation extends Mutation<UploadImage, UploadImageVariables> {}
+const ImageLoader = () => {
+  const [file, setFile] = useState<File | null>();
+  const [errorMessage, setErrorMessage] = useState<string|null>('');
 
-const ImageUploader = () => {
-  const fileInput = useRef<File|null>();
+  const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFile( event.target.files && event.target.files.item(0));
+  };
+
+  const onClickHandler = async (
+    event: React.FormEvent<HTMLInputElement>,
+    uploadImage: MutationFn<UploadImage, UploadImageVariables>,
+  ) => {
+    event.preventDefault();
+    try {
+      await uploadImage({ variables: { file } });
+    }
+    catch (e) {}
+  };
+
   return (
-    <UploadImageMutation mutation={UPLOAD_IMAGE}>
-      {(uploadImage, uploadImageData) => {
-        const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-          fileInput.current = event.target.files && event.target.files.item(0);
-        };
-        const onClickHandler = async (event: React.FormEvent<HTMLInputElement>) => {
-          event.preventDefault();
-          await uploadImage({variables: { file: fileInput.current }});
-        };
-
-        const imageUrl = uploadImageData.data && uploadImageData.data.uploadImage && uploadImageData.data.uploadImage.imageUrl;
-
+    <Mutation<UploadImage, UploadImageVariables> mutation={UPLOAD_IMAGE}>
+      {(uploadImage, { data, error, loading }) => {
+        const imageUrl = data && data.uploadImage && data.uploadImage.imageUrl;
+        setErrorMessage(getGQLErrorMessages(error));
         return (
           <Form>
-            {
-              imageUrl && <img src={imageUrl} alt="Generic placeholder image" />
-            }
-            <Input
-              type="file"
-              required
-              onChange={onChangeHandler}
-            />
-            <Input
-              type="submit"
-              onClick={onClickHandler}
-            />
+            {loading && <Spinner/>}
+            {!error && imageUrl && <Image imageUrl={imageUrl || ''} />}
+            <Input type="file" id="files" required onChange={onChangeHandler} />
+            {error && <Hint>{errorMessage}</Hint>}
+            {file && <Button onClick={e => onClickHandler(e, uploadImage)}>Сохранить</Button>}
           </Form>
         );
       }}
-    </UploadImageMutation>
+    </Mutation>
   );
 };
 
-
-export { ImageUploader };
+export { ImageLoader };

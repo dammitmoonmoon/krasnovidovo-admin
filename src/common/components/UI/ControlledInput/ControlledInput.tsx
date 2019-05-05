@@ -1,7 +1,7 @@
 import React from 'react';
 import {Input, InputProps, Label} from "reactstrap";
-import styled from "styled-components";
 import {FieldConfig} from "../FormGenerator/FormGeneratorTypes";
+import {Hint} from "../misc";
 
 interface Props extends FieldConfig {
   changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -21,12 +21,6 @@ const ControlledInput: React.FC<Props> = props => {
     </div>
   );
 };
-
-const Hint = styled.div`
-  font-size: 12px;
-  color: red;
-`;
-
 
 function inputTypeSelector(props: Props): JSX.Element {
   let InputElement: JSX.Element = <></>;

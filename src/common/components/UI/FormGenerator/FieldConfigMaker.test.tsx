@@ -1,4 +1,4 @@
-import { ConfigMarker } from '../ConfigMaker';
+import { ConfigMarker } from './ConfigMaker';
 import {
   fieldConfigBrief,
   fieldConfigLong,

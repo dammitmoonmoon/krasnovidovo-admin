@@ -576,7 +576,7 @@ module.exports = function(webpackEnv) {
           reportFiles: [
             '**',
             '!**/*.json',
-            '!**/__tests__/**',
+            '!**/tests/**',
             '!**/?(*.)(spec|test).*',
             '!**/src/setupProxy.*',
             '!**/src/setupTests.*',
