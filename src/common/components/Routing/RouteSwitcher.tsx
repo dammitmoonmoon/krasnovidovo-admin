@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import {Dummy} from "../../../modules/Dummy";
 import {RouteProtector} from "./RouteProtector/RouteProtector";
 import {routes} from "./routes";
 
@@ -13,7 +12,7 @@ const RouteSwitcher = () => (
                         exact={route.exact}
                         path={route.path}
                         name={route.name}
-                        component={() => <RouteProtector>{Dummy}</RouteProtector>}
+                        component={() => <RouteProtector>{route.component}</RouteProtector>}
                         key={route.name}
                     />
                 ))

@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import {FunctionComponent} from "react";
+import {ComponentClass, FunctionComponent} from "react";
 import * as React from "react";
 import {Query} from "react-apollo";
 import {RouteComponentProps, withRouter} from "react-router";
@@ -22,7 +22,7 @@ const GET_CURRENT_USER = gql`
 `;
 
 interface Props extends RouteComponentProps {
-  children: FunctionComponent;
+  children: FunctionComponent|ComponentClass<any>;
 }
 
 const RouteProtector = (props: Props): JSX.Element => (
@@ -36,7 +36,7 @@ const RouteProtector = (props: Props): JSX.Element => (
           {loading && <Spinner/>}
           {
             !error && !loading && data &&
-            props.children({})
+            React.createElement(props.children, {})
           }
         </React.Fragment>
       )

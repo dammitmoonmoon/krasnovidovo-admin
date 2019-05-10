@@ -27,6 +27,18 @@ export enum Roles {
   USER = "USER",
 }
 
+/**
+ * New associate data
+ */
+export interface AddAssociateInput {
+  id: number;
+  fullName: string;
+  position: string;
+  photo?: string | null;
+  email?: string | null;
+  link?: string | null;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

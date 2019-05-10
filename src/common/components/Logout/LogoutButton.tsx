@@ -2,7 +2,7 @@ import * as React from "react";
 import {Mutation} from "react-apollo";
 import {RouteComponentProps, withRouter} from "react-router";
 import {Button, Spinner} from "reactstrap";
-import {ErrorReport} from "../ErrorReport/ErrorReport";
+import {ErrorReport} from "../UI/ErrorReport/ErrorReport";
 import {Paths} from "../Routing";
 import {Logout} from "./apolloTypes/Logout";
 import {LOGOUT} from "./gql";

@@ -5,7 +5,7 @@ import {withRouter} from 'react-router-dom';
 import { Col, Row} from "reactstrap";
 import {FormGenerator} from "../UI/FormGenerator/FormGenerator";
 import {FieldValuePairs } from "../UI/FormGenerator/FormGeneratorTypes";
-import {authForm} from "../UI/forms/authorization";
+import {authForm} from "../UI/formParams/authorization";
 import {Login, LoginVariables} from "./apolloTypes/Login";
 
 interface Props extends RouteComponentProps<{}> {
