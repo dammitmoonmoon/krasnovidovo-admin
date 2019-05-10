@@ -21,9 +21,15 @@
     "experimentalDecorators": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "downlevelIteration": true,
+    "typeRoots": [
+      "./src/types"
+    ]
   },
   "include": [
-    "src"
+    "src",
+    "node_modules/@types/jest/index.d.ts",
+    "node_modules/@types/jest/index.d.ts"
   ]
 }

@@ -1,4 +1,4 @@
-import {FieldConfigMarker} from "../FormGenerator/FieldConfigMaker";
+import {ConfigMarker} from "../FormGenerator/ConfigMaker";
 import {FieldConfigPartial} from "../FormGenerator/FormGeneratorTypes";
 import {isRequired, ValidatorHints } from "../FormGenerator/validators";
 
@@ -37,7 +37,7 @@ const login: FieldConfigPartial = {
      ],
  };
 
-const authForm = [login, password].map(config => new FieldConfigMarker(config));
+const authForm = ConfigMarker.makeForm([login, password]);
 
 export {
     authForm

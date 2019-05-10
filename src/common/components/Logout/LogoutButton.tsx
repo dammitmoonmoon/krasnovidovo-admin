@@ -1,19 +1,11 @@
-import gql from "graphql-tag";
 import * as React from "react";
 import {Mutation} from "react-apollo";
 import {RouteComponentProps, withRouter} from "react-router";
 import {Button, Spinner} from "reactstrap";
-import {ErrorReport} from "../ErrorReport/ErrorReport";
+import {ErrorReport} from "../UI/ErrorReport/ErrorReport";
 import {Paths} from "../Routing";
 import {Logout} from "./apolloTypes/Logout";
-
-const LOGOUT = gql`
-  mutation Logout {
-    logout {
-      username
-    }
-  }
-`;
+import {LOGOUT} from "./gql";
 
 class LogoutMutation extends Mutation<
   Logout
@@ -36,7 +28,7 @@ const LogoutButton = ({history}: Props) => (
         return null;
       };
       return (
-        <Button color="info" onClick={logoutHandler}>primary</Button>
+        <Button color="info" onClick={logoutHandler} id="logoutButton">Выйти</Button>
       );
     }
     }
@@ -44,4 +36,4 @@ const LogoutButton = ({history}: Props) => (
 );
 
 const LogoutButtonRouted = withRouter(LogoutButton);
-export {LogoutButtonRouted as LogoutButton};
+export {LogoutButton, LogoutButtonRouted};

@@ -14,7 +14,7 @@ export interface FieldConfigPartial {
             displayValue: string;
         }[];
     };
-    validators: Validator[];
+    validators?: Validator[];
 }
 
 export interface FieldConfig {
@@ -37,7 +37,7 @@ export interface FieldConfig {
             displayValue: string;
         }[];
     };
-    validators: Validator[];
+    validators: Validator[] | undefined;
 }
 
 export interface FormDataHookProps {

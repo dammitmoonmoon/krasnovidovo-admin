@@ -8,9 +8,14 @@ import React, {useRef, useState} from "react";
 import {FieldConfig, FormData, FormDataHookProps} from "./FormGeneratorTypes";
 import {FieldValidators} from "./validators";
 
+export interface FormDataHookResult {
+    config: FieldConfig[];
+    updateFormData: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    formData: FormData;
+}
 
-function useFormData(props: FormDataHookProps) {
-    const [ formData, setFormData ] = useState(getFormDataFromConfig(props.formConfig));
+export function useFormData(props: FormDataHookProps): FormDataHookResult {
+    const [ formData, setFormData ] = useState(generateFormDataFromConfig(props.formConfig));
     const validationRef = useRef<FieldValidators>();
     const validators = obtainFieldValidatorsConstant(props.formConfig, validationRef);
 
@@ -23,11 +28,11 @@ function useFormData(props: FormDataHookProps) {
     return { config, updateFormData, formData };
 }
 
-function getFormDataFromConfig(formConfig: FieldConfig[]): FormData {
-    return formConfig.reduce((acc, curr) => ({...acc, ...generateFormDataPerFieldFromConfig(curr)}), {});
+export function generateFormDataFromConfig(formConfig: FieldConfig[]): FormData {
+    return formConfig.reduce((acc, curr) => ({...acc, ...extractFormDataFromFieldConfig(curr)}), {});
 }
 
-function obtainFieldValidatorsConstant(formConfig: FieldConfig[], validationRef: React.MutableRefObject<FieldValidators|undefined>) {
+export function obtainFieldValidatorsConstant(formConfig: FieldConfig[], validationRef: React.MutableRefObject<FieldValidators|undefined>) {
     const validation = validationRef.current;
     if (validation) {
         return validation;
@@ -38,11 +43,11 @@ function obtainFieldValidatorsConstant(formConfig: FieldConfig[], validationRef:
     return validationRef.current;
 }
 
-function generateFieldValidatorsFromConfig(formConfig: FieldConfig[]): FieldValidators {
+export function generateFieldValidatorsFromConfig(formConfig: FieldConfig[]): FieldValidators {
   return formConfig.reduce( (acc, curr) => ({...acc, ...generateValidatorsPerFieldFromConfig(curr)}), {});
 }
 
-function updateFormDataOnChange (prevFormData: FormData, validators: FieldValidators, e: React.ChangeEvent<HTMLInputElement>): FormData {
+export function updateFormDataOnChange (prevFormData: FormData, validators: FieldValidators, e: React.ChangeEvent<HTMLInputElement>): FormData {
     const formData = cloneDeep(prevFormData);
     const currentValidators = validators[e.target.name];
     const firstFailedValidation = currentValidators.find(validator => !validator.validator(e.target.value, validator.params));
@@ -58,29 +63,29 @@ function updateFormDataOnChange (prevFormData: FormData, validators: FieldValida
     return formData;
 }
 
-function updateFormConfig(prevFormConfig: FieldConfig[], formData: FormData ): FieldConfig[] {
+export function updateFormConfig(prevFormConfig: FieldConfig[], formData: FormData ): FieldConfig[] {
     const formConfig = cloneDeep(prevFormConfig);
     const fieldNames = Object.keys(formData);
     fieldNames.forEach(fieldName => updateCurrentFieldConfig(fieldName, formConfig, formData));
     return formConfig;
 }
 
-function generateFormDataPerFieldFromConfig(fieldConfig: FieldConfig): FormData {
+export function extractFormDataFromFieldConfig(fieldConfig: FieldConfig): FormData {
     const name = fieldConfig.inputParams.common.name;
-    const values = {...fieldConfig.inputData, hint: ''};
+    const values = {...fieldConfig.inputData};
     return {
         [name]: values
     }
 }
 
-function generateValidatorsPerFieldFromConfig(fieldConfig: FieldConfig): FieldValidators {
+export function generateValidatorsPerFieldFromConfig(fieldConfig: FieldConfig): FieldValidators {
     const name = fieldConfig.inputParams.common.name;
     return {
-        [name]: fieldConfig.validators
+        [name]: fieldConfig.validators || []
     }
 }
 
-function updateCurrentFieldConfig (fieldName: string, formGroupConfig: FieldConfig[], formGroupData: FormData) {
+export function updateCurrentFieldConfig (fieldName: string, formGroupConfig: FieldConfig[], formGroupData: FormData) {
     const currentFieldConfig = formGroupConfig.find(formConfig => formConfig.inputParams.common.name === fieldName);
     if (currentFieldConfig) {
         currentFieldConfig.inputData.value = formGroupData[fieldName].value;
@@ -89,7 +94,3 @@ function updateCurrentFieldConfig (fieldName: string, formGroupConfig: FieldConf
         currentFieldConfig.inputData.hint = formGroupData[fieldName].hint;
     }
 }
-
-export {
-    useFormData,
-};

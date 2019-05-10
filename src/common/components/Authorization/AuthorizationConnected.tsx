@@ -4,23 +4,17 @@ import {Login, LoginVariables} from "./apolloTypes/Login";
 import {Authorization} from "./Authorization";
 import {LOGIN} from "./gql";
 
-class LoginMutation extends Mutation<
-    Login,
-    LoginVariables
-    > {}
-
-
 const AuthorizationConnected: React.FunctionComponent<{}> = () => (
-  <LoginMutation mutation={LOGIN}>
-      {(login, loginData) => (
-        <Authorization
-          loginData={loginData}
-          login={login}
-        />
-      )}
-  </LoginMutation>
+  <Mutation<Login, LoginVariables> mutation={LOGIN}>
+    {(login, loginData) => (
+      <Authorization
+        loginData={loginData}
+        login={login}
+      />
+    )}
+  </Mutation>
 );
 
 export {
-    AuthorizationConnected
+  AuthorizationConnected
 };
